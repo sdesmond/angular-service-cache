@@ -1,0 +1,29 @@
+<form>
+    <mat-form-field>
+        <mat-label>Select a User ID</mat-label>
+        <mat-select [(value)]="selectedId">
+            <mat-option></mat-option>
+            <mat-option *ngFor="let id of ids" [value]="id">
+                {{id}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button
+        (click)="getUserClick()">Load User {{selectedId}}</button>
+
+    <button mat-stroked-button
+        (click)="updateUserClick()">Update User {{selectedId}}</button>
+
+    <button mat-stroked-button
+        (click)="deleteUserClick()">Delete User {{selectedId}}</button>
+</form>
+
+<div class="row info-container" *ngIf="result$ | async">
+    <img class="avatar"
+     [src]="(result$ | async)?.avatar"/>
+    <div class="info column padding">
+        <span class="name">{{(result$ | async)?.first_name}} {{(result$ | async)?.last_name}}</span>
+        <span class="email">{{(result$ | async)?.email}}</span>
+    </div>
+</div>
