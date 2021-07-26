@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import equal = require("fast-deep-equal")
+import * as equal from "fast-deep-equal"
 
 export class ServiceCache<I, O> {
   public observable$: Observable<O | null> = of(null);

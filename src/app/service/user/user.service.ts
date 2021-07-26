@@ -9,6 +9,7 @@ import {ServiceCache} from "../serviceCache";
   providedIn: 'root'
 })
 export class UserService {
+  public rootUrl = 'https://reqres.in/api/users/';
   private cache = {
     getUser: new ServiceCache<number, User>()
   }
@@ -26,7 +27,7 @@ export class UserService {
     this.cache.getUser.clear(); // We couldn't use the cache, so we need to wipe it out.
     this.cache.getUser.previousInput = id; // Record the current input so we can compare against it next time.
     console.info(`Cache miss on getUser for id ${id}, making HTTP call`);
-    return this.cache.getUser.observable$ = this.httpClient.get<User>(`https://reqres.in/api/users/${id}`)
+    return this.cache.getUser.observable$ = this.httpClient.get<User>(`${this.rootUrl}${id}`)
         .pipe(
             map((response: any): User => response.data), // Map the response to a UserOutput.
             shareReplay() // Share the result of this pipe with the next caller instead of running it again.
@@ -36,7 +37,7 @@ export class UserService {
   public updateUser(user: User): Observable<User> {
     return combineLatest([
       this.cache.getUser.observable$ ?? of(null),
-      this.httpClient.put<User>(`https://reqres.in/api/users/${user.id}`, user)
+      this.httpClient.put<User>(`${this.rootUrl}${user.id}`, user)
     ]).pipe(
         take(1), // Only take the first result, then unsubscribe
         tap(([cachedUser]) => {
@@ -50,10 +51,10 @@ export class UserService {
     );
   }
 
-  public removeUser(user: User): Observable<any> {
+  public deleteUser(user: User): Observable<any> {
     return combineLatest([
       this.cache.getUser.observable$ ?? of(null),
-      this.httpClient.delete<User>(`https://reqres.in/api/users/${user.id}`)
+      this.httpClient.delete<User>(`${this.rootUrl}${user.id}`)
     ]).pipe(
         take(1), // Only take the first result, then unsubscribe
         tap(([cachedUser]) => {

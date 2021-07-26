@@ -36,7 +36,7 @@ export class AppComponent {
     if (!this.selectedId) {
       alert('Select a user from the dropdown first!');
     } else {
-      this.userService.removeUser({ id: +this.selectedId } as User).subscribe();
+      this.userService.deleteUser({ id: +this.selectedId } as User).subscribe();
     }
   }
 }
